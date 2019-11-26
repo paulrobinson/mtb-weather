@@ -32,7 +32,7 @@ public class ExampleResource {
     @GET
     @Path("/rainfall")
     @Produces(MediaType.APPLICATION_JSON)
-    public WeatherResult rainfall() {
+    public List<WeatherResult.Reading> rainfall() {
 
         LocalDate current =  LocalDate.now();
         RainfallData rainfallData = rainfallService.getRainfallData(current.minusDays(4).toString(), "rainfall", true);
@@ -48,7 +48,7 @@ public class ExampleResource {
             String date = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
             weatherResult.incrementRainfall(date, item.value);
         }
-        return weatherResult;
+        return weatherResult.getReadings();
     }
 
 
