@@ -1,10 +1,8 @@
 package eu.paulrobinson.mtb;
 
 import eu.paulrobinson.mtb.data.WeatherResult;
-import eu.paulrobinson.mtb.loader.ForcastData;
-import eu.paulrobinson.mtb.loader.ForcastService;
-import eu.paulrobinson.mtb.loader.RainfallData;
-import eu.paulrobinson.mtb.loader.RainfallService;
+import eu.paulrobinson.mtb.data.WeatherResult2;
+import eu.paulrobinson.mtb.loader.*;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.inject.Inject;
@@ -29,6 +27,9 @@ public class ExampleResource {
     @RestClient
     ForcastService forcastService;
 
+    @Inject
+    DataLoader dataLoader;
+
     @GET
     @Path("/rainfall")
     @Produces(MediaType.APPLICATION_JSON)
@@ -43,10 +44,10 @@ public class ExampleResource {
         WeatherResult weatherResult = new WeatherResult();
         weatherResult.location = "Hamsterley Forest";
 
-        for (RainfallData.Item item : rainfallData.items) {
-            cal.setTime(item.dateTime);
+        for (RainfallData.PastWeatherData pastWeatherData : rainfallData.items) {
+            cal.setTime(pastWeatherData.dateTime);
             String date = cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH);
-            weatherResult.incrementRainfall(date, item.value);
+            weatherResult.incrementRainfall(date, pastWeatherData.value);
         }
         return weatherResult.getReadings();
     }
@@ -55,13 +56,13 @@ public class ExampleResource {
     @GET
     @Path("/forcast")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ForcastData.Feature.Properties.TimeSeries> forcast() {
+    public List<ForcastData.Feature.Properties.FutureWeatherData> forcast() {
 
         ForcastData forcastData = forcastService.forcastDataThreeHourly(false, 54.6586, -1.9325, "a4dc9522-17c6-460f-8096-c6f757203eeb", "bU6tF0cC3lV5bP5eN1cB4hA5pM6bA1jM6lF4aW1uR7lA6eS6cQ");
 
-        List<ForcastData.Feature.Properties.TimeSeries> forcastResult = new ArrayList<>();
+        List<ForcastData.Feature.Properties.FutureWeatherData> forcastResult = new ArrayList<>();
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
-        for (ForcastData.Feature.Properties.TimeSeries data : forcastData.getData()) {
+        for (ForcastData.Feature.Properties.FutureWeatherData data : forcastData.getData()) {
             cal.setTime(data.time);
             if (cal.get(Calendar.HOUR_OF_DAY) == 18) {
                 System.out.println(data.time);
@@ -70,5 +71,13 @@ public class ExampleResource {
         }
 
         return forcastResult;
+    }
+
+    @GET
+    @Path("/data")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<WeatherResult2> data() {
+
+        return dataLoader.getWeatherResults();
     }
 }

@@ -2,8 +2,6 @@ package eu.paulrobinson.mtb.loader;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +10,7 @@ public class ForcastData {
 
     public List<Feature> features;
 
-    public List<Feature.Properties.TimeSeries> getData() {
+    public List<Feature.Properties.FutureWeatherData> getData() {
         return features.get(0).properties.timeSeries;
     }
 
@@ -24,10 +22,10 @@ public class ForcastData {
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Properties {
 
-            public List<TimeSeries> timeSeries;
+            public List<FutureWeatherData> timeSeries;
 
             @JsonIgnoreProperties(ignoreUnknown = true)
-            public static class TimeSeries {
+            public static class FutureWeatherData {
 
                 public Date time;
                 public Double feelsLikeTemp;
