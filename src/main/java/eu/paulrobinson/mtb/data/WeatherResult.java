@@ -1,56 +1,26 @@
 package eu.paulrobinson.mtb.data;
 
-import java.util.*;
+import eu.paulrobinson.mtb.loader.ForcastData;
+import eu.paulrobinson.mtb.loader.RainfallData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WeatherResult {
 
-    public String location;
+    public String locationName;
+    public String postcode;
+    public Double latitude;
+    public Double longitude;
 
-    public Map<String, Reading> readings = new HashMap<>();
+    public List<RainfallData.PastWeatherData> pastWeatherData = new ArrayList<>();
 
-    public List<Reading> getReadings() {
-        List<Reading> readingsResults = new ArrayList<>(readings.values());
-        Collections.sort(readingsResults);
-        return readingsResults;
+    public List<ForcastData.Feature.Properties.FutureWeatherData> futureWeatherData = new ArrayList<>();
+
+    public WeatherResult(String locationName, String postcode, Double latitude, Double longitude) {
+        this.locationName = locationName;
+        this.postcode = postcode;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
-
-    public void incrementRainfall(String date, double rainfall) {
-
-        Reading reading = readings.get(date);
-        if (reading == null ) {
-            reading = new Reading(date);
-            readings.put(date, reading);
-        }
-        reading.incrimentRainfall(rainfall);
-    }
-
-    public static class Reading implements Comparable<Reading> {
-
-        private String date;
-        private double rainfall;
-
-        public Reading(String date) {
-            this.date = date;
-            this.rainfall = 0;
-        }
-
-        public void incrimentRainfall(double amount) {
-            rainfall += amount;
-        }
-
-
-        @Override
-        public int compareTo(Reading o) {
-            return date.compareTo(o.date);
-        }
-
-        public String getDate() {
-            return date;
-        }
-
-        public double getRainfall() {
-            return rainfall;
-        }
-    }
-
 }

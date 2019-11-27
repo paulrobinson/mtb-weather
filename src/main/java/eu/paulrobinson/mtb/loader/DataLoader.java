@@ -1,6 +1,6 @@
 package eu.paulrobinson.mtb.loader;
 
-import eu.paulrobinson.mtb.data.WeatherResult2;
+import eu.paulrobinson.mtb.data.WeatherResult;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.inject.Inject;
@@ -22,15 +22,15 @@ public class DataLoader {
     private int pastDataDays = 4;
     private int futureDataDays = 7;
 
-    private List<WeatherResult2> weatherResults = new ArrayList<>();
+    private List<WeatherResult> weatherResults = new ArrayList<>();
 
     public DataLoader() {
 
-        WeatherResult2 weatherResult = new WeatherResult2("Hamsterley Forrest", "DL13 3NL", 54.6586, -1.9325);
+        WeatherResult weatherResult = new WeatherResult("Hamsterley Forrest", "DL13 3NL", 54.6586, -1.9325);
         weatherResults.add(weatherResult);
     }
 
-    public List<WeatherResult2> getWeatherResults() {
+    public List<WeatherResult> getWeatherResults() {
 
         refreshDate();
 
@@ -47,7 +47,7 @@ public class DataLoader {
         LocalDate current =  LocalDate.now();
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
 
-        for (WeatherResult2 weatherResult : weatherResults) {
+        for (WeatherResult weatherResult : weatherResults) {
 
             RainfallData rainfallData = rainfallService.getRainfallData(current.minusDays(pastDataDays).toString(), "rainfall", true);
             Map<Integer, RainfallData.PastWeatherData> readings = new HashMap<>();
@@ -75,7 +75,7 @@ public class DataLoader {
 
     private void loadFutureWeather() {
 
-        for (WeatherResult2 weatherResult : weatherResults) {
+        for (WeatherResult weatherResult : weatherResults) {
             ForcastData forcastData = forcastService.forcastDataThreeHourly(false, weatherResult.latitude, weatherResult.longitude, "a4dc9522-17c6-460f-8096-c6f757203eeb", "bU6tF0cC3lV5bP5eN1cB4hA5pM6bA1jM6lF4aW1uR7lA6eS6cQ");
 
             Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
