@@ -33,6 +33,7 @@ public class ForcastData {
                 public Double probOfHeavyRain;
                 public Double probOfRain;
                 public Double windSpeed10m;
+                public Integer significantWeatherCode;
 
             }
         }

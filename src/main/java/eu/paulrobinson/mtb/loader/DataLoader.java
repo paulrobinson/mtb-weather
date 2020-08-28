@@ -79,6 +79,7 @@ public class DataLoader {
             ForcastData forcastData = forcastService.forcastDataThreeHourly(false, weatherResult.latitude, weatherResult.longitude, "a4dc9522-17c6-460f-8096-c6f757203eeb", "bU6tF0cC3lV5bP5eN1cB4hA5pM6bA1jM6lF4aW1uR7lA6eS6cQ");
 
             Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/London"));
+            weatherResult.futureWeatherData.clear();
             for (ForcastData.Feature.Properties.FutureWeatherData data : forcastData.getData()) {
                 cal.setTime(data.time);
                 if (cal.get(Calendar.HOUR_OF_DAY) == 18) {
